@@ -1,1 +1,4788 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Mobile Shop ERP</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    body{
+      background:#f1f5f9;
+      color:#172033;
+    }
+
+    button,input,select,textarea{
+      font-family:inherit;
+    }
+
+    /* LOGIN */
+    #loginPage{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#0757c9,#0b82f5);
+      padding:20px;
+    }
+
+    .login-box{
+      width:390px;
+      max-width:100%;
+      background:white;
+      border-radius:18px;
+      padding:35px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+
+    .login-logo{
+      width:70px;
+      height:70px;
+      margin:auto;
+      border-radius:18px;
+      background:#0878e8;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:32px;
+      font-weight:bold;
+    }
+
+    .login-box h2{
+      text-align:center;
+      margin-top:15px;
+      color:#0757c9;
+    }
+
+    .login-box p{
+      text-align:center;
+      color:#777;
+      margin:7px 0 25px;
+    }
+
+    .login-box input{
+      width:100%;
+      padding:13px;
+      border:1px solid #d5dce5;
+      border-radius:8px;
+      margin-bottom:14px;
+      outline:none;
+    }
+
+    .login-box input:focus{
+      border-color:#0878e8;
+    }
+
+    .login-btn{
+      width:100%;
+      padding:13px;
+      border:0;
+      border-radius:8px;
+      background:#0878e8;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .login-error{
+      color:#d71920;
+      text-align:center;
+      margin-top:12px;
+    }
+
+    /* APP */
+    #app{
+      display:none;
+      min-height:100vh;
+    }
+
+    .topbar{
+      height:65px;
+      background:#0878e8;
+      color:white;
+      display:flex;
+      align-items:center;
+      padding:0 20px;
+      gap:20px;
+      position:fixed;
+      left:0;
+      right:0;
+      top:0;
+      z-index:1000;
+    }
+
+    .brand{
+      width:230px;
+      font-size:21px;
+      font-weight:bold;
+    }
+
+    .search-box{
+      flex:1;
+      max-width:550px;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:11px 16px;
+      border:none;
+      border-radius:22px;
+      outline:none;
+    }
+
+    .top-user{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:bold;
+    }
+
+    .logout-btn{
+      border:0;
+      background:rgba(255,255,255,.18);
+      color:white;
+      padding:9px 14px;
+      border-radius:7px;
+      cursor:pointer;
+    }
+
+    .sidebar{
+      width:230px;
+      position:fixed;
+      top:65px;
+      bottom:0;
+      left:0;
+      background:#fff;
+      border-right:1px solid #ddd;
+      overflow-y:auto;
+      z-index:900;
+    }
+
+    .menu-title{
+      padding:18px 18px 8px;
+      color:#999;
+      font-size:11px;
+      text-transform:uppercase;
+      font-weight:bold;
+    }
+
+    .menu-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      cursor:pointer;
+      color:#344054;
+      font-size:14px;
+      border-left:4px solid transparent;
+    }
+
+    .menu-item:hover,
+    .menu-item.active{
+      background:#eaf4ff;
+      color:#0878e8;
+      border-left-color:#0878e8;
+    }
+
+    .menu-icon{
+      width:22px;
+      text-align:center;
+      font-size:18px;
+    }
+
+    .main{
+      margin-left:230px;
+      padding:90px 20px 30px;
+    }
+
+    /* DASHBOARD */
+    .page-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .page-title h2{
+      color:#1d2939;
+    }
+
+    .date-label{
+      color:#667085;
+      font-size:14px;
+    }
+
+    .metric-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .metric{
+      background:white;
+      border-radius:10px;
+      padding:15px;
+      border:1px solid #e4e7ec;
+      box-shadow:0 2px 5px rgba(0,0,0,.03);
+    }
+
+    .metric-title{
+      color:#667085;
+      font-size:12px;
+      margin-bottom:8px;
+    }
+
+    .metric-value{
+      font-size:21px;
+      font-weight:bold;
+      color:#0878e8;
+    }
+
+    .metric small{
+      display:block;
+      margin-top:5px;
+      color:#98a2b3;
+    }
+
+    .dashboard-layout{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+    }
+
+    .dash-tile{
+      background:white;
+      min-height:105px;
+      border:1px solid #e4e7ec;
+      border-radius:12px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .dash-tile:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+      border-color:#0878e8;
+    }
+
+    .dash-icon{
+      width:48px;
+      height:48px;
+      border-radius:12px;
+      background:#eaf4ff;
+      color:#0878e8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:23px;
+      margin-bottom:8px;
+    }
+
+    .dash-tile span{
+      font-size:13px;
+      font-weight:bold;
+      color:#344054;
+    }
+
+    /* CARDS */
+    .card{
+      background:white;
+      border:1px solid #e4e7ec;
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:20px;
+    }
+
+    .card-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:18px;
+      gap:10px;
+    }
+
+    .card-header h3{
+      color:#1d2939;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field label{
+      font-size:12px;
+      font-weight:bold;
+      color:#475467;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      border:1px solid #d0d5dd;
+      border-radius:7px;
+      padding:10px;
+      outline:none;
+      background:white;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color:#0878e8;
+    }
+
+    .full{
+      grid-column:1/-1;
+    }
+
+    .btn{
+      border:0;
+      border-radius:7px;
+      padding:10px 15px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .btn-primary{
+      background:#0878e8;
+      color:white;
+    }
+
+    .btn-success{
+      background:#16a34a;
+      color:white;
+    }
+
+    .btn-danger{
+      background:#dc2626;
+      color:white;
+    }
+
+    .btn-warning{
+      background:#f59e0b;
+      color:white;
+    }
+
+    .btn-light{
+      background:#eef2f6;
+      color:#344054;
+    }
+
+    .btn-sm{
+      padding:6px 9px;
+      font-size:11px;
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    /* TABLE */
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:700px;
+    }
+
+    th{
+      background:#0878e8;
+      color:white;
+      padding:10px;
+      text-align:left;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    td{
+      border-bottom:1px solid #eaecf0;
+      padding:9px;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    tr:hover td{
+      background:#f8fbff;
+    }
+
+    .status{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:20px;
+      font-size:10px;
+      font-weight:bold;
+    }
+
+    .status-green{
+      background:#dcfce7;
+      color:#15803d;
+    }
+
+    .status-red{
+      background:#fee2e2;
+      color:#b91c1c;
+    }
+
+    .status-yellow{
+      background:#fef3c7;
+      color:#92400e;
+    }
+
+    /* TABS */
+    .tabs{
+      display:flex;
+      gap:5px;
+      flex-wrap:wrap;
+      margin-bottom:15px;
+    }
+
+    .tab{
+      padding:9px 15px;
+      border:1px solid #d0d5dd;
+      background:white;
+      border-radius:7px;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .tab.active{
+      background:#0878e8;
+      color:white;
+      border-color:#0878e8;
+    }
+
+    /* TOAST */
+    #toast{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      z-index:5000;
+      display:none;
+      padding:13px 18px;
+      border-radius:8px;
+      color:white;
+      box-shadow:0 8px 25px rgba(0,0,0,.2);
+    }
+
+    .toast-success{background:#16a34a;}
+    .toast-error{background:#dc2626;}
+
+    /* MODAL */
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      z-index:3000;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .modal-box{
+      background:white;
+      width:700px;
+      max-width:100%;
+      max-height:90vh;
+      overflow:auto;
+      border-radius:12px;
+      padding:20px;
+    }
+
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .close{
+      border:0;
+      background:#eee;
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .loading{
+      text-align:center;
+      padding:30px;
+      color:#667085;
+    }
+
+    .empty{
+      text-align:center;
+      padding:30px;
+      color:#98a2b3;
+    }
+
+    /* MOBILE */
+    .mobile-menu{
+      display:none;
+      border:0;
+      background:transparent;
+      color:white;
+      font-size:25px;
+      cursor:pointer;
+    }
+
+    @media(max-width:1100px){
+      .metric-grid{
+        grid-template-columns:repeat(3,1fr);
+      }
+
+      .dashboard-layout{
+        grid-template-columns:repeat(3,1fr);
+      }
+
+      .form-grid{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    @media(max-width:800px){
+      .mobile-menu{
+        display:block;
+      }
+
+      .brand{
+        width:auto;
+      }
+
+      .search-box{
+        display:none;
+      }
+
+      .sidebar{
+        transform:translateX(-100%);
+        transition:.2s;
+      }
+
+      .sidebar.open{
+        transform:translateX(0);
+      }
+
+      .main{
+        margin-left:0;
+      }
+
+      .metric-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .dashboard-layout{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .form-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:500px){
+      .main{
+        padding:80px 10px 20px;
+      }
+
+      .topbar{
+        padding:0 10px;
+      }
+
+      .top-user span{
+        display:none;
+      }
+
+      .metric-grid,
+      .dashboard-layout,
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        padding:14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+
+  <div class="login-box">
+
+    <div class="login-logo">📱</div>
+
+    <h2>Mobile Shop ERP</h2>
+    <p>Management & IMEI System</p>
+
+    <input id="loginUsername" type="text" placeholder="Username">
+
+    <input id="loginPassword" type="password" placeholder="Password"
+           onkeydown="if(event.key==='Enter') login()">
+
+    <button class="login-btn" onclick="login()">LOGIN</button>
+
+    <div id="loginError" class="login-error"></div>
+
+  </div>
+
+</div>
+
+
+<!-- APP -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+    <div class="brand">
+      📱 Mobile Shop ERP
+    </div>
+
+    <div class="search-box">
+      <input id="globalSearch"
+             placeholder="Search IMEI, Invoice, Customer..."
+             onkeydown="if(event.key==='Enter') doGlobalSearch()">
+    </div>
+
+    <div class="top-user">
+      <span id="currentUserName">Admin</span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+  </div>
+
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="menu-title">Main</div>
+
+    <div class="menu-item active" onclick="showPage('dashboard',this)">
+      <span class="menu-icon">🏠</span> Dashboard
+    </div>
+
+    <div class="menu-item" onclick="showPage('purchase',this)">
+      <span class="menu-icon">🛒</span> Purchase
+    </div>
+
+    <div class="menu-item" onclick="showPage('purchaseReturn',this)">
+      <span class="menu-icon">↩️</span> Purchase Return
+    </div>
+
+    <div class="menu-item" onclick="showPage('stock',this)">
+      <span class="menu-icon">📦</span> Stock
+    </div>
+
+    <div class="menu-item" onclick="showPage('transfer',this)">
+      <span class="menu-icon">🔄</span> Stock Transfer
+    </div>
+
+    <div class="menu-item" onclick="showPage('saleOrder',this)">
+      <span class="menu-icon">📋</span> Sale Order
+    </div>
+
+    <div class="menu-item" onclick="showPage('sale',this)">
+      <span class="menu-icon">💰</span> Sale
+    </div>
+
+    <div class="menu-item" onclick="showPage('saleReturn',this)">
+      <span class="menu-icon">↩️</span> Sale Return
+    </div>
+
+    <div class="menu-title">Accounts</div>
+
+    <div class="menu-item" onclick="showPage('cashPayment',this)">
+      <span class="menu-icon">💵</span> Cash Payment
+    </div>
+
+    <div class="menu-item" onclick="showPage('bankPayment',this)">
+      <span class="menu-icon">🏦</span> Bank Payment
+    </div>
+
+    <div class="menu-item" onclick="showPage('cashReceived',this)">
+      <span class="menu-icon">💵</span> Cash Received
+    </div>
+
+    <div class="menu-item" onclick="showPage('bankReceived',this)">
+      <span class="menu-icon">🏦</span> Bank Received
+    </div>
+
+    <div class="menu-item" onclick="showPage('ledger',this)">
+      <span class="menu-icon">📒</span> Ledger
+    </div>
+
+    <div class="menu-item" onclick="showPage('cashBank',this)">
+      <span class="menu-icon">💳</span> Cash / Bank
+    </div>
+
+    <div class="menu-item" onclick="showPage('receivable',this)">
+      <span class="menu-icon">📊</span> Receivable / Payable
+    </div>
+
+    <div class="menu-item" onclick="showPage('profitLoss',this)">
+      <span class="menu-icon">📈</span> Profit / Loss
+    </div>
+
+    <div class="menu-title">Masters</div>
+
+    <div class="menu-item" onclick="showPage('supplier',this)">
+      <span class="menu-icon">🏢</span> Supplier
+    </div>
+
+    <div class="menu-item" onclick="showPage('customer',this)">
+      <span class="menu-icon">👤</span> Customer
+    </div>
+
+    <div class="menu-item" onclick="showPage('masters',this)">
+      <span class="menu-icon">⚙️</span> Masters
+    </div>
+
+    <div class="menu-item" onclick="showPage('expenses',this)">
+      <span class="menu-icon">💸</span> Expenses
+    </div>
+
+    <div class="menu-item" onclick="showPage('vouchers',this)">
+      <span class="menu-icon">🧾</span> Vouchers
+    </div>
+
+    <div class="menu-item" onclick="showPage('journal',this)">
+      <span class="menu-icon">📘</span> Journal Voucher (JV)
+    </div>
+
+    <div class="menu-item" onclick="showPage('admin',this)">
+      <span class="menu-icon">🔐</span> Admin
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section id="page-dashboard" class="page">
+
+      <div class="page-title">
+        <div>
+          <h2>Dashboard</h2>
+          <div class="date-label" id="dashboardDate"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="loadDashboard()">
+          ↻ Refresh
+        </button>
+      </div>
+
+      <div class="metric-grid">
+
+        <div class="metric">
+          <div class="metric-title">Today's Sale</div>
+          <div class="metric-value" id="mSale">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Sale Quantity</div>
+          <div class="metric-value" id="mQty">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Cash / Bank IN</div>
+          <div class="metric-value" id="mCashIn">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Cash / Bank OUT</div>
+          <div class="metric-value" id="mCashOut">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Receivables</div>
+          <div class="metric-value" id="mReceivable">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Payables</div>
+          <div class="metric-value" id="mPayable">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Stock</div>
+          <div class="metric-value" id="mStock">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Expenses</div>
+          <div class="metric-value" id="mExpense">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Cash / Bank</div>
+          <div class="metric-value" id="mBalance">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Today's GP</div>
+          <div class="metric-value" id="mGP">0</div>
+        </div>
+
+      </div>
+
+
+      <div class="dashboard-layout">
+
+        <div class="dash-tile" onclick="go('purchase')">
+          <div class="dash-icon">🛒</div>
+          <span>Purchase</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('purchaseReturn')">
+          <div class="dash-icon">↩️</div>
+          <span>Purchase Return</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('cashPayment')">
+          <div class="dash-icon">💵</div>
+          <span>Cash Payment</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('bankPayment')">
+          <div class="dash-icon">🏦</div>
+          <span>Bank Payment</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('saleOrder')">
+          <div class="dash-icon">📋</div>
+          <span>Sale Order</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('sale')">
+          <div class="dash-icon">💰</div>
+          <span>Sale Invoice</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('cashReceived')">
+          <div class="dash-icon">💵</div>
+          <span>Cash Received</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('cashBank')">
+          <div class="dash-icon">💳</div>
+          <span>Cash / Bank</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('saleReturn')">
+          <div class="dash-icon">↩️</div>
+          <span>Sale Return</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('transfer')">
+          <div class="dash-icon">🔄</div>
+          <span>Transfer</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('bankReceived')">
+          <div class="dash-icon">🏦</div>
+          <span>Bank Received</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('supplier')">
+          <div class="dash-icon">🏢</div>
+          <span>Supplier</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('customer')">
+          <div class="dash-icon">👤</div>
+          <span>Customer</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('ledger')">
+          <div class="dash-icon">📒</div>
+          <span>Ledger</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('masters')">
+          <div class="dash-icon">⚙️</div>
+          <span>Model / Brand / Color</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('stock')">
+          <div class="dash-icon">📦</div>
+          <span>Stock</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('vouchers')">
+          <div class="dash-icon">🧾</div>
+          <span>Vouchers</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('expenses')">
+          <div class="dash-icon">💸</div>
+          <span>Expenses</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('receivable')">
+          <div class="dash-icon">📊</div>
+          <span>Receivable / Payable</span>
+        </div>
+
+        <div class="dash-tile" onclick="go('profitLoss')">
+          <div class="dash-icon">📈</div>
+          <span>Profit / Loss</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PURCHASE -->
+    <section id="page-purchase" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Purchase</h2>
+        <button class="btn btn-light" onclick="loadPurchase()">Refresh</button>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>New Purchase</h3>
+          <strong id="purchaseNo"></strong>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Supplier</label>
+            <select id="purchaseSupplier"></select>
+          </div>
+
+          <div class="field">
+            <label>Supplier Mobile</label>
+            <input id="purchaseSupplierMobile">
+          </div>
+
+          <div class="field">
+            <label>Shop</label>
+            <select id="purchaseShop"></select>
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="purchasePaymentMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+              <option>Credit</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Payment Amount</label>
+            <input id="purchasePayment" type="number" value="0">
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>Product / IMEI <small style="font-weight:normal;color:#64748b">(Qty 10 → 10 IMEI rows)</small></h3>
+
+          <button class="btn btn-primary" onclick="addPurchaseRow()">
+            + Add Item
+          </button>
+        </div>
+
+        <div class="table-wrap">
+
+          <table id="purchaseTable">
+
+            <thead>
+              <tr>
+                <th>IMEI</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Memory</th>
+                <th>Color</th>
+                <th>Purchase Price</th>
+                <th>Sale Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="purchaseRows"></tbody>
+
+          </table>
+
+        </div>
+
+        <div style="margin-top:15px;text-align:right">
+          <strong>Total: Rs. <span id="purchaseTotal">0</span></strong>
+          &nbsp;&nbsp;
+          <button class="btn btn-success" id="purchaseSaveBtn" onclick="savePurchase()">
+            Save Purchase
+          </button><button class="btn btn-light" id="purchaseCancelEditBtn" style="display:none;margin-left:8px" onclick="loadPurchase()">Cancel Edit</button>
+        </div>
+
+      </div>
+
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <h3>Purchase History</h3>
+          <input id="purchaseSearch"
+                 placeholder="Search Purchase No, Supplier..."
+                 oninput="loadPurchaseHistory()"
+                 style="max-width:300px;padding:8px">
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Purchase No</th>
+                <th>Date</th>
+                <th>Supplier</th>
+                <th>Shop</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Balance</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="purchaseHistory">
+              <tr>
+                <td colspan="9" class="loading">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- SALE -->
+    <section id="page-sale" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Sale Invoice</h2>
+        <button class="btn btn-light" onclick="loadSalePage()">New Sale</button>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>Sale Invoice</h3>
+          <strong id="saleInvoiceNo"></strong>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Customer Type</label>
+            <select id="saleCustomerType" onchange="saleCustomerTypeChanged()">
+              <option value="Retail">Retail</option>
+              <option value="Wholesale">Wholesale</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Customer</label>
+            <select id="saleCustomer"></select>
+          </div>
+
+          <div class="field" id="saleCashCustomerBox" style="display:none">
+            <label>Cash Customer Name</label>
+            <input id="saleCashCustomerName" placeholder="Enter cash customer name">
+          </div>
+
+          <div class="field">
+            <label>Customer Mobile</label>
+            <input id="saleCustomerMobile">
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="salePaymentMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+              <option>Credit</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Payment Amount</label>
+            <input id="salePayment" type="number" value="0">
+          </div>
+
+          <div class="field">
+            <label>Discount</label>
+            <input id="saleDiscount" type="number" value="0"
+                   oninput="calculateSale()">
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>IMEI</h3>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Sale Quantity</label>
+            <input id="saleQty" type="number" min="1" value="1" oninput="saleQtyChanged()">
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label>IMEI(s) — one IMEI per line</label>
+            <textarea id="saleIMEI" rows="3" placeholder="Qty 1 = 1 IMEI
+Qty 5 = 5 IMEIs"></textarea>
+            <small style="color:#64748b">Jitni Qty ho, utne unique IMEI enter karein.</small>
+          </div>
+
+          <div class="field">
+            <label>Brand</label>
+            <input id="saleBrand" readonly>
+          </div>
+
+          <div class="field">
+            <label>Model</label>
+            <input id="saleModel" readonly>
+          </div>
+
+          <div class="field">
+            <label>Memory</label>
+            <input id="saleMemory" readonly>
+          </div>
+
+          <div class="field">
+            <label>Color</label>
+            <input id="saleColor" readonly>
+          </div>
+
+          <div class="field">
+            <label>Purchase Price</label>
+            <input id="salePurchasePrice" type="number" oninput="calculateSale()">
+          </div>
+
+          <div class="field">
+            <label>Sale Price</label>
+            <input id="salePrice" type="number" oninput="calculateSale()">
+          </div>
+
+          <div class="field">
+            <label>Final Amount</label>
+            <input id="saleFinal" readonly>
+          </div>
+
+        </div>
+
+        <div style="margin-top:18px;text-align:right">
+
+          <strong style="font-size:18px">
+            Total: Rs. <span id="saleTotal">0</span>
+          </strong>
+
+          <button class="btn btn-success"
+                  style="margin-left:15px"
+                  id="saleSaveBtn"
+                  onclick="saveSale()">
+            Save Sale
+          </button>
+          <button class="btn btn-light" id="saleCancelEditBtn" style="display:none;margin-left:8px" onclick="loadSalePage()">Cancel Edit</button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>Old Sale / Invoice Search</h3>
+
+          <div class="actions">
+            <input id="saleSearch"
+                   placeholder="Invoice / IMEI / Customer"
+                   style="padding:9px;border:1px solid #ddd;border-radius:7px">
+
+            <button class="btn btn-primary"
+                    onclick="loadSalesHistory()">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>IMEI</th>
+                <th>Model</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Profit</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="salesHistory"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STOCK -->
+    <section id="page-stock" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Stock</h2>
+
+        <div class="actions">
+          <input id="stockSearch"
+                 placeholder="Search IMEI / Model / Brand"
+                 style="padding:10px;border:1px solid #ddd;border-radius:7px">
+
+          <button class="btn btn-primary" onclick="loadStock()">
+            Search
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>IMEI</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Memory</th>
+                <th>Color</th>
+                <th>Purchase</th>
+                <th>Sale</th>
+                <th>Activation</th>
+                <th>Supplier</th>
+                <th>Shop</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="stockTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUPPLIER -->
+    <section id="page-supplier" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Suppliers</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>New Supplier</h3>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Name</label>
+            <input id="supplierName">
+          </div>
+
+          <div class="field">
+            <label>Mobile</label>
+            <input id="supplierMobile">
+          </div>
+
+          <div class="field">
+            <label>Address</label>
+            <input id="supplierAddress">
+          </div>
+
+          <div class="field">
+            <label>Opening Balance</label>
+            <input id="supplierOpening" type="number" value="0">
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+          <button class="btn btn-success" onclick="saveSupplier()">
+            Save Supplier
+          </button>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Address</th>
+                <th>Opening</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="supplierTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CUSTOMER -->
+    <section id="page-customer" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Customers</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>New Customer</h3>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Name</label>
+            <input id="customerName">
+          </div>
+
+          <div class="field">
+            <label>Mobile</label>
+            <input id="customerMobile">
+          </div>
+
+          <div class="field">
+            <label>Customer Type</label>
+            <select id="customerType">
+              <option>Retail</option>
+              <option>Wholesale</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Address</label>
+            <input id="customerAddress">
+          </div>
+
+          <div class="field">
+            <label>Opening Balance</label>
+            <input id="customerOpening" type="number" value="0">
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+          <button class="btn btn-success" onclick="saveCustomer()">
+            Save Customer
+          </button>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Type</th>
+                <th>Address</th>
+                <th>Opening</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="customerTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MASTERS -->
+    <section id="page-masters" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Masters</h2>
+      </div>
+
+      <div class="tabs">
+
+        <button class="tab active" onclick="masterTab('Brand',this)">
+          Brand
+        </button>
+
+        <button class="tab" onclick="masterTab('Model',this)">
+          Model
+        </button>
+
+        <button class="tab" onclick="masterTab('Memory',this)">
+          Memory
+        </button>
+
+        <button class="tab" onclick="masterTab('Color',this)">
+          Color
+        </button>
+
+        <button class="tab" onclick="masterTab('Shop',this)">
+          Shop
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label id="masterLabel">Brand Name</label>
+            <input id="masterName">
+          </div>
+
+          <div class="field" style="justify-content:end">
+
+            <button class="btn btn-success"
+                    onclick="saveMaster()">
+              + Add
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="mastersTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- LEDGER -->
+    <section id="page-ledger" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Ledger</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Party</label>
+            <select id="ledgerParty"></select>
+          </div>
+
+          <div class="field">
+            <label>From Date</label>
+            <input id="ledgerFrom" type="date">
+          </div>
+
+          <div class="field">
+            <label>To Date</label>
+            <input id="ledgerTo" type="date">
+          </div>
+
+          <div class="field" style="justify-content:end">
+
+            <button class="btn btn-primary"
+                    onclick="loadLedger()">
+              Search
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Party</th>
+                <th>Type</th>
+                <th>Reference</th>
+                <th>Description</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+
+            <tbody id="ledgerTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- VOUCHERS -->
+    <section id="page-vouchers" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Cash / Bank Vouchers</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>New Voucher</h3>
+          <strong id="voucherNo"></strong>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Voucher Type</label>
+            <select id="voucherType">
+              <option>Cash Payment</option>
+              <option>Bank Payment</option>
+              <option>Cash Received</option>
+              <option>Bank Received</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Party</label>
+            <select id="voucherParty"></select>
+          </div>
+
+          <div class="field">
+            <label>Amount</label>
+            <input id="voucherAmount" type="number">
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="voucherPaymentMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Description</label>
+            <textarea id="voucherDescription"></textarea>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveVoucher()">
+            Save Voucher
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-header">
+
+          <h3>Old Vouchers</h3>
+
+          <button class="btn btn-primary"
+                  onclick="loadVouchers()">
+            Refresh
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Voucher</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Party</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="voucherTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- JOURNAL VOUCHER -->
+    <section id="page-journal" class="page" style="display:none">
+      <div class="page-title"><h2>Journal Voucher (JV)</h2></div>
+      <div class="card">
+        <div class="card-header"><h3>New / Edit Journal Voucher</h3><strong id="jvNo"></strong></div>
+        <div class="form-grid">
+          <div class="field"><label>Debit Account / Head</label><input id="jvDebit" placeholder="e.g. Customer / Expense / Cash"></div>
+          <div class="field"><label>Credit Account / Head</label><input id="jvCredit" placeholder="e.g. Supplier / Sales / Bank"></div>
+          <div class="field"><label>Amount</label><input id="jvAmount" type="number"></div>
+          <div class="field full"><label>Description</label><textarea id="jvDescription"></textarea></div>
+        </div>
+        <div style="margin-top:15px"><button class="btn btn-success" id="jvSaveBtn" onclick="saveJournalVoucher()">Save JV</button><button class="btn btn-light" id="jvCancelBtn" style="display:none;margin-left:8px" onclick="resetJournalVoucher()">Cancel Edit</button></div>
+      </div>
+      <div class="card"><div class="card-header"><h3>Journal Voucher History</h3><button class="btn btn-primary" onclick="loadJournalVouchers()">Refresh</button></div>
+        <div class="table-wrap"><table><thead><tr><th>JV No</th><th>Date</th><th>Debit</th><th>Credit</th><th>Amount</th><th>Description</th><th>Actions</th></tr></thead><tbody id="journalTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- EXPENSES -->
+    <section id="page-expenses" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Expenses</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Category</label>
+            <input id="expenseCategory">
+          </div>
+
+          <div class="field">
+            <label>Description</label>
+            <input id="expenseDescription">
+          </div>
+
+          <div class="field">
+            <label>Amount</label>
+            <input id="expenseAmount" type="number">
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="expenseMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Shop</label>
+            <select id="expenseShop"></select>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveExpense()">
+            Save Expense
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="expenseTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CASH BANK -->
+    <section id="page-cashBank" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Cash / Bank</h2>
+      </div>
+
+      <div class="card">
+
+        <div id="cashBankBalance"
+             style="font-size:25px;font-weight:bold;color:#0878e8">
+          Loading...
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Reference</th>
+                <th>Description</th>
+                <th>Cash</th>
+                <th>Bank</th>
+              </tr>
+            </thead>
+
+            <tbody id="cashBankTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RECEIVABLE PAYABLE -->
+    <section id="page-receivable" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Receivable / Payable</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="metric-grid">
+
+          <div class="metric">
+            <div class="metric-title">Receivable</div>
+            <div class="metric-value" id="rpReceivable">0</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-title">Payable</div>
+            <div class="metric-value" id="rpPayable">0</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Party</th>
+                <th>Type</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+
+            <tbody id="rpTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROFIT LOSS -->
+    <section id="page-profitLoss" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Profit / Loss</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>From Date</label>
+            <input id="plFrom" type="date">
+          </div>
+
+          <div class="field">
+            <label>To Date</label>
+            <input id="plTo" type="date">
+          </div>
+
+          <div class="field" style="justify-content:end">
+
+            <button class="btn btn-primary"
+                    onclick="loadProfitLoss()">
+              Generate
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="metric-grid">
+
+        <div class="metric">
+          <div class="metric-title">Net Sales</div>
+          <div class="metric-value" id="plSales">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Cost</div>
+          <div class="metric-value" id="plCost">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Gross Profit</div>
+          <div class="metric-value" id="plGross">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Expenses</div>
+          <div class="metric-value" id="plExpense">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-title">Net Profit</div>
+          <div class="metric-value" id="plNet">0</div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PURCHASE RETURN -->
+    <section id="page-purchaseReturn" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Purchase Return</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Supplier</label>
+            <select id="prParty"></select>
+          </div>
+
+          <div class="field">
+            <label>IMEI</label>
+            <input id="prIMEI">
+          </div>
+
+          <div class="field">
+            <label>Amount</label>
+            <input id="prAmount" type="number">
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="prMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+              <option>Credit</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Reason</label>
+            <textarea id="prReason"></textarea>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="savePurchaseReturn()">
+            Save Return
+          </button>
+
+        </div>
+
+      </div>
+      <div class="card"><div class="card-header"><h3>Return History</h3><button class="btn btn-primary" onclick="loadReturnsHistory()">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>No</th><th>Date</th><th>Type</th><th>Party</th><th>IMEI</th><th>Amount</th><th>Reason</th><th>Actions</th></tr></thead><tbody id="returnHistory"></tbody></table></div></div>
+
+    </section>
+
+
+    <!-- SALE RETURN -->
+    <section id="page-saleReturn" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Sale Return</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Customer</label>
+            <select id="srParty"></select>
+          </div>
+
+          <div class="field">
+            <label>IMEI</label>
+            <input id="srIMEI">
+          </div>
+
+          <div class="field">
+            <label>Amount</label>
+            <input id="srAmount" type="number">
+          </div>
+
+          <div class="field">
+            <label>Payment Method</label>
+            <select id="srMethod">
+              <option>Cash</option>
+              <option>Bank</option>
+              <option>Credit</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Reason</label>
+            <textarea id="srReason"></textarea>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveSaleReturn()">
+            Save Return
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TRANSFER -->
+    <section id="page-transfer" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Stock Transfer</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>IMEI</label>
+            <input id="transferIMEI">
+          </div>
+
+          <div class="field">
+            <label>From Shop</label>
+            <select id="transferFrom"></select>
+          </div>
+
+          <div class="field">
+            <label>To Shop</label>
+            <select id="transferTo"></select>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveTransfer()">
+            Transfer
+          </button>
+
+        </div>
+
+      </div>
+      <div class="card"><div class="card-header"><h3>Transfer History</h3><button class="btn btn-primary" onclick="loadTransfersHistory()">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>No</th><th>Date</th><th>IMEI</th><th>From</th><th>To</th><th>Actions</th></tr></thead><tbody id="transferHistory"></tbody></table></div></div>
+
+    </section>
+
+
+    <!-- SALE ORDER -->
+    <section id="page-saleOrder" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Sale Orders</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Customer</label>
+            <select id="orderCustomer"></select>
+          </div>
+
+          <div class="field">
+            <label>Mobile</label>
+            <input id="orderMobile">
+          </div>
+
+          <div class="field">
+            <label>IMEI</label>
+            <input id="orderIMEI">
+          </div>
+
+          <div class="field">
+            <label>Amount</label>
+            <input id="orderAmount" type="number">
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveSaleOrder()">
+            Save Order
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>IMEI</th>
+                <th>Amount</th>
+                <th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="saleOrderTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN -->
+    <section id="page-admin" class="page" style="display:none">
+
+      <div class="page-title">
+        <h2>Admin / Users</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Username</label>
+            <input id="userUsername">
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input id="userPassword">
+          </div>
+
+          <div class="field">
+            <label>Name</label>
+            <input id="userName">
+          </div>
+
+          <div class="field">
+            <label>Role</label>
+            <select id="userRole">
+              <option>Admin</option>
+              <option>User</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div style="margin-top:15px">
+
+          <button class="btn btn-success"
+                  onclick="saveUser()">
+            Create User
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Failed</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="userTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PLACEHOLDER PAGES -->
+    <section id="page-cashPayment" class="page" style="display:none">
+      <div class="card">
+        <h2>Cash Payment</h2>
+        <p style="margin-top:10px;color:#667085">
+          Cash Payment vouchers can be created from Vouchers.
+        </p>
+        <button class="btn btn-primary" style="margin-top:15px"
+                onclick="go('vouchers')">
+          Open Vouchers
+        </button>
+      </div>
+    </section>
+
+    <section id="page-bankPayment" class="page" style="display:none">
+      <div class="card">
+        <h2>Bank Payment</h2>
+        <p style="margin-top:10px;color:#667085">
+          Bank Payment vouchers can be created from Vouchers.
+        </p>
+        <button class="btn btn-primary" style="margin-top:15px"
+                onclick="go('vouchers')">
+          Open Vouchers
+        </button>
+      </div>
+    </section>
+
+    <section id="page-cashReceived" class="page" style="display:none">
+      <div class="card">
+        <h2>Cash Received</h2>
+        <button class="btn btn-primary" style="margin-top:15px"
+                onclick="go('vouchers')">
+          Open Vouchers
+        </button>
+      </div>
+    </section>
+
+    <section id="page-bankReceived" class="page" style="display:none">
+      <div class="card">
+        <h2>Bank Received</h2>
+        <button class="btn btn-primary" style="margin-top:15px"
+                onclick="go('vouchers')">
+          Open Vouchers
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+
+  let TOKEN = "";
+  let CURRENT_USER = null;
+  let MASTERS = [];
+  let PARTIES = [];
+  let activeMasterType = "Brand";
+
+  const $ = id => document.getElementById(id);
+
+  function server(functionName,...args){
+
+    return new Promise((resolve,reject)=>{
+
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(err=>{
+          console.error(err);
+          reject(err);
+        })
+        [functionName](...args);
+
+    });
+
+  }
+
+
+  function toast(message,type="success"){
+
+    const t=$("toast");
+
+    t.textContent=message;
+    t.className=type==="error"
+      ? "toast-error"
+      : "toast-success";
+
+    t.style.display="block";
+
+    setTimeout(()=>{
+      t.style.display="none";
+    },3000);
+
+  }
+
+
+  /* ===================== LOGIN ===================== */
+
+  async function login(){
+
+    const username=$("loginUsername").value.trim();
+    const password=$("loginPassword").value;
+
+    $("loginError").textContent="";
+
+    if(!username || !password){
+
+      $("loginError").textContent="Username and password required";
+      return;
+
+    }
+
+    try{
+
+      const res=await server("loginUser",username,password);
+
+      if(res && res.success){
+
+        TOKEN=res.token;
+
+        CURRENT_USER={
+          username:res.username,
+          name:res.name,
+          role:res.role,
+          view:res.view,
+          add:res.add,
+          edit:res.edit,
+          delete:res.delete
+        };
+
+        $("loginPage").style.display="none";
+        $("app").style.display="block";
+
+        $("currentUserName").textContent =
+          CURRENT_USER.name || CURRENT_USER.username;
+
+        setDateDefaults();
+
+        await loadInitialData();
+
+        loadDashboard();
+
+      }else{
+
+        $("loginError").textContent =
+          (res && res.message) || "Login failed";
+
+      }
+
+    }catch(e){
+
+      $("loginError").textContent=e.message || "Login error";
+
+    }
+
+  }
+
+
+  async function logout(){
+
+    try{
+      if(TOKEN) await server("logoutUser",TOKEN);
+    }catch(e){}
+
+    TOKEN="";
+    CURRENT_USER=null;
+
+    $("app").style.display="none";
+    $("loginPage").style.display="flex";
+
+    $("loginUsername").value="";
+    $("loginPassword").value="";
+
+  }
+
+
+  /* ===================== INITIAL DATA (Masters + Parties) ===================== */
+
+  async function loadInitialData(){
+
+    try{
+
+      const m=await server("getAllMasters",TOKEN);
+      MASTERS = m || [];
+
+      const p=await server("getAllParties",TOKEN);
+      PARTIES = p || [];
+
+      fillSelects();
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  function fillSelects(){
+
+    const shops = MASTERS.filter(x=>String(x.type).toLowerCase()==="shop");
+
+    fillSelect("purchaseShop",shops,true);
+    fillSelect("expenseShop",shops,true);
+    fillSelect("transferFrom",shops,true);
+    fillSelect("transferTo",shops,true);
+
+    const suppliers = PARTIES.filter(x=>String(x.type).toLowerCase()==="supplier");
+    const customers = PARTIES.filter(x=>String(x.type).toLowerCase()==="customer");
+
+    fillPartySelect("purchaseSupplier",suppliers);
+    fillPartySelect("saleCustomer",customers);
+    fillPartySelect("orderCustomer",customers);
+    fillPartySelect("prParty",suppliers);
+    fillPartySelect("srParty",customers);
+    fillPartySelect("ledgerParty",PARTIES);
+    fillPartySelect("voucherParty",PARTIES);
+
+  }
+
+
+  function fillSelect(id,items,includeBlank=false){
+
+    const el=$(id);
+    if(!el)return;
+
+    el.innerHTML=includeBlank
+      ? "<option value=''>Select</option>"
+      : "";
+
+    items.forEach(x=>{
+
+      const name = x.name;
+      const opt=document.createElement("option");
+
+      opt.value=name;
+      opt.textContent=name;
+
+      el.appendChild(opt);
+
+    });
+
+  }
+
+
+  function fillPartySelect(id,items){
+
+    const el=$(id);
+    if(!el)return;
+
+    el.innerHTML="<option value=''>Select</option>";
+
+    items.forEach(x=>{
+
+      const name = x.name;
+
+      const opt=document.createElement("option");
+
+      opt.value=name;
+      opt.textContent=name;
+
+      el.appendChild(opt);
+
+    });
+
+  }
+
+
+  function toggleSidebar(){
+
+    $("sidebar").classList.toggle("open");
+
+  }
+
+
+  function showPage(page,element){
+
+    document.querySelectorAll(".page").forEach(p=>{
+      p.style.display="none";
+    });
+
+    const target=$("page-"+page);
+
+    if(target) target.style.display="block";
+
+    document.querySelectorAll(".menu-item").forEach(x=>{
+      x.classList.remove("active");
+    });
+
+    if(element) element.classList.add("active");
+
+    $("sidebar").classList.remove("open");
+
+    pageLoaded(page);
+
+  }
+
+
+  function go(page){
+
+    const menu=document.querySelector(
+      '.menu-item[onclick*="showPage(\''+page+'\'"]'
+    );
+
+    showPage(page,menu);
+
+  }
+
+
+  function pageLoaded(page){
+
+    if(page==="dashboard") loadDashboard();
+    if(page==="purchase") loadPurchase();
+    if(page==="stock") loadStock();
+    if(page==="supplier") loadSuppliers();
+    if(page==="customer") loadCustomers();
+    if(page==="masters") loadMasters();
+    if(page==="ledger") loadLedger();
+    if(page==="vouchers") loadVouchers();
+    if(page==="purchaseReturn" || page==="saleReturn") loadReturnsHistory();
+    if(page==="transfer") loadTransfersHistory();
+    if(page==="journal") loadJournalVouchers();
+    if(page==="expenses") loadExpenses();
+    if(page==="cashBank") loadCashBank();
+    if(page==="receivable") loadReceivable();
+    if(page==="profitLoss") loadProfitLoss();
+    if(page==="sale") loadSalePage();
+    if(page==="saleOrder") loadSaleOrders();
+    if(page==="admin") loadUsers();
+
+  }
+
+
+  function setDateDefaults(){
+
+    const today=new Date().toISOString().slice(0,10);
+
+    ["ledgerFrom","plFrom"].forEach(id=>{
+      if($(id)) $(id).value=today;
+    });
+
+    ["ledgerTo","plTo"].forEach(id=>{
+      if($(id)) $(id).value=today;
+    });
+
+    $("dashboardDate").textContent=
+      new Date().toLocaleDateString();
+
+  }
+
+
+  /* ===================== DASHBOARD ===================== */
+
+  async function loadDashboard(){
+
+    try{
+
+      const r = await server("getDashboardStats",TOKEN) || {};
+
+      $("mSale").textContent      = money(r.todaySale || 0);
+      $("mQty").textContent       = r.todaySaleQty || 0;
+      $("mCashIn").textContent    = money(r.cashIn || 0);
+      $("mCashOut").textContent   = money(r.todayExpenses || 0);
+      $("mReceivable").textContent= money(r.receivables || 0);
+      $("mPayable").textContent   = money(r.payables || 0);
+      $("mStock").textContent     = r.availableStock || 0;
+      $("mExpense").textContent   = money(r.todayExpenses || 0);
+      $("mBalance").textContent   = money(r.totalCashBank || 0);
+      $("mGP").textContent        = money(r.todayGrossProfit || 0);
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  /* ===================== SALE ===================== */
+
+  async function loadSalePage(){
+
+    $("saleIMEI").value="";
+    if($("saleQty")) $("saleQty").value=1;
+    $("saleBrand").value="";
+    $("saleModel").value="";
+    $("saleMemory").value="";
+    $("saleColor").value="";
+    $("salePurchasePrice").value="";
+    $("salePrice").value="";
+    $("saleFinal").value="";
+    $("saleTotal").textContent="0";
+    $("saleDiscount").value="0";
+    $("salePayment").value="0";
+
+    try{
+
+      const no=await server("generateInvoiceNo",TOKEN);
+
+      $("saleInvoiceNo").textContent=no || "";
+
+    }catch(e){}
+
+    saleCustomerTypeChanged();
+
+    loadSalesHistory();
+
+  }
+
+
+  function saleCustomerTypeChanged(){
+
+    const type=$("saleCustomerType").value;
+
+    const customers=PARTIES.filter(x=>
+      String(x.type).toLowerCase()==="customer" &&
+      (
+        type==="Retail"
+        ? String(x.customerType||"Retail").toLowerCase()!=="wholesale"
+        : String(x.customerType||"").toLowerCase()==="wholesale"
+      )
+    );
+
+    fillPartySelect("saleCustomer",customers);
+    const cashBox=$("saleCashCustomerBox");
+    if(cashBox) cashBox.style.display=(type==="Retail") ? "block" : "none";
+
+    if(type==="Retail"){
+
+      const opt=[...$("saleCustomer").options]
+        .find(x=>x.value.toLowerCase()==="cash customer");
+
+      if(opt){
+        $("saleCustomer").value=opt.value;
+      }
+
+    }
+
+  }
+
+
+  async function lookupSaleIMEI(){
+
+    const imei=String($("saleIMEI").value||"").split(/[\n,]+/).map(x=>x.trim()).filter(Boolean)[0] || "";
+
+    if(!imei){
+      toast("IMEI enter karein","error");
+      return;
+    }
+
+    try{
+
+      const d=await server("searchIMEI",TOKEN,imei);
+
+      if(!d){
+
+        toast("IMEI not found","error");
+        return;
+
+      }
+
+      $("saleBrand").value          = d.brand || "";
+      $("saleModel").value          = d.model || "";
+      $("saleMemory").value         = d.memory || "";
+      $("saleColor").value          = d.color || "";
+      $("salePurchasePrice").value  = d.purchasePrice || 0;
+      $("salePrice").value          = d.salePrice || 0;
+
+      calculateSale();
+
+      if($("salePayment").value==="0"){
+        $("salePayment").value=$("saleFinal").value;
+      }
+
+      toast("IMEI details loaded");
+
+    }catch(e){
+
+      toast(e.message || "IMEI search failed","error");
+
+    }
+
+  }
+
+
+  function calculateSale(){
+
+    const price=Number($("salePrice").value||0);
+    const discount=Number($("saleDiscount").value||0);
+
+    const qty=Math.max(1,Number($("saleQty")?.value||1));
+    const final=Math.max(0,(price*qty)-discount);
+
+    $("saleFinal").value=final;
+    $("saleTotal").textContent=money(final);
+
+  }
+
+
+  function saleQtyChanged(){
+    const qty=Math.max(1,Number($("saleQty")?.value||1)); const vals=String($("saleIMEI")?.value||"").split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
+    if(vals.length>qty)$("saleIMEI").value=vals.slice(0,qty).join("\n"); calculateSale();
+  }
+
+  async function saveSale(){
+    const imeis=String($("saleIMEI").value||"").split(/[\n,]+/).map(x=>x.trim()).filter(Boolean), qty=Math.max(1,Number($("saleQty")?.value||1));
+    if(!imeis.length){toast("IMEI required","error");return;} if(imeis.length!==qty){toast("Qty "+qty+" hai, exactly "+qty+" unique IMEI enter karein.","error");return;} if(new Set(imeis.map(x=>x.toLowerCase())).size!==imeis.length){toast("Duplicate IMEI not allowed","error");return;}
+    try{const obj={customerName:($("saleCustomerType").value==="Retail"&&$("saleCashCustomerName").value.trim())?$("saleCashCustomerName").value.trim():($("saleCustomer").value||"Cash Customer"),customerMobile:$("saleCustomerMobile").value,customerType:$("saleCustomerType").value,imeis:imeis,salePrice:Number($("salePrice").value||0),discount:Number($("saleDiscount").value||0),paymentAmount:Number($("salePayment").value||0),paymentMethod:$("salePaymentMethod").value};const r=SALE_EDIT_MODE?await server("editSale",TOKEN,SALE_EDIT_INVOICE,obj):await server("createSale",TOKEN,obj);if(r&&r.success===false){toast(r.message||"Sale failed","error");return;}toast(SALE_EDIT_MODE?"Sale updated successfully":"Sale saved successfully");await loadDashboard();await loadInitialData();if(r&&r.invoiceNo)printSale(r.invoiceNo);loadSalePage();}catch(e){toast(e.message||"Sale save failed","error");}
+  }
+
+  async function loadSalesHistory(){
+
+    const tbody=$("salesHistory");
+
+    tbody.innerHTML="<tr><td colspan='9' class='loading'>Loading...</td></tr>";
+
+    try{
+
+      const filters = {
+        search: $("saleSearch") ? $("saleSearch").value : ""
+      };
+
+      const data=await server("getAllSales",TOKEN,filters) || [];
+
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+
+        const tr=document.createElement("tr");
+
+        tr.innerHTML=`
+
+          <td>${esc(x.invoiceNo)}</td>
+          <td>${esc(x.date)}</td>
+          <td>${esc(x.customerName)}</td>
+          <td>${esc(x.imei)}</td>
+          <td>${esc(x.model)}</td>
+          <td>${money(x.finalAmount)}</td>
+          <td>${money(x.paymentAmount)}</td>
+          <td>${money(x.profit)}</td>
+
+          <td>
+
+            <div class="actions">
+
+              <button class="btn btn-light btn-sm"
+                      onclick="printSale('${escJs(x.invoiceNo)}')">
+                Print
+              </button>
+
+              <button class="btn btn-primary btn-sm"
+                      onclick="pdfSale('${escJs(x.invoiceNo)}')">
+                PDF
+              </button>
+
+              <button class="btn btn-warning btn-sm"
+                      onclick="editSalePrompt('${escJs(x.invoiceNo)}')">
+                Edit
+              </button>
+
+              <button class="btn btn-danger btn-sm"
+                      onclick="deleteSalePrompt('${escJs(x.invoiceNo)}')">
+                Delete
+              </button>
+
+            </div>
+
+          </td>
+
+        `;
+
+        tbody.appendChild(tr);
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='9' class='empty'>No sales found</td></tr>";
+      }
+
+    }catch(e){
+
+      tbody.innerHTML=
+        "<tr><td colspan='9' class='empty'>"+esc(e.message)+"</td></tr>";
+
+    }
+
+  }
+
+
+  async function printSale(invoice){
+
+    try{
+
+      const html=await server("getSaleInvoiceHtml",TOKEN,invoice);
+
+      openPrintWindow(html);
+
+    }catch(e){
+
+      toast(e.message || "Print failed","error");
+
+    }
+
+  }
+
+
+  async function pdfSale(invoice){
+
+    try{
+
+      const r=await server("createSaleInvoicePdf",TOKEN,invoice);
+
+      if(r && r.url){
+        window.open(r.url,"_blank");
+      }else{
+        toast("PDF created");
+      }
+
+    }catch(e){
+
+      toast(e.message || "PDF failed","error");
+
+    }
+
+  }
+
+
+  let SALE_EDIT_MODE=false;
+  let SALE_EDIT_INVOICE="";
+
+  async function editSalePrompt(invoice){
+    try{
+      const rows=await server("getSaleRowsByInvoice",TOKEN,invoice) || [];
+      if(!rows.length){toast("Sale not found","error");return;}
+      const old=rows[0];
+      showPage("sale");
+      SALE_EDIT_MODE=true; SALE_EDIT_INVOICE=invoice;
+      $("saleInvoiceNo").textContent=invoice;
+      $("saleCustomerType").value=old.customerType || "Retail";
+      saleCustomerTypeChanged();
+      $("saleCustomer").value=old.customerName || "Cash Customer";
+      if($("saleCashCustomerName")) $("saleCashCustomerName").value=(old.customerName && old.customerName.toLowerCase()!=="cash customer") ? old.customerName : "";
+      $("saleCustomerMobile").value=old.customerMobile || "";
+      $("salePaymentMethod").value=old.paymentMethod || "Cash";
+      $("salePayment").value=old.paymentAmount || 0;
+      $("saleDiscount").value=rows.reduce((a,x)=>a+(Number(x.discount)||0),0);
+      $("saleIMEI").value=rows.map(x=>x.imei).join("\n");
+      if($("saleQty")) $("saleQty").value=rows.length;
+      $("saleBrand").value=old.brand || "";
+      $("saleModel").value=old.model || "";
+      $("saleMemory").value=old.memory || "";
+      $("saleColor").value=old.color || "";
+      $("salePurchasePrice").value=old.purchasePrice || 0;
+      $("salePrice").value=old.salePrice || 0;
+      calculateSale();
+      $("saleSaveBtn").textContent="Update Sale";
+      $("saleCancelEditBtn").style.display="inline-block";
+      window.scrollTo({top:0,behavior:"smooth"});
+    }catch(e){toast(e.message || "Edit failed","error");}
+  }
+
+
+  async function deleteSalePrompt(invoice){
+
+    if(!confirm("Delete invoice "+invoice+" ?")) return;
+
+    try{
+
+      await server("deleteSale",TOKEN,invoice);
+
+      toast("Sale deleted");
+
+      loadSalesHistory();
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== STOCK ===================== */
+
+  async function loadStock(){
+
+    const tbody=$("stockTable");
+
+    tbody.innerHTML=
+      "<tr><td colspan='12' class='loading'>Loading...</td></tr>";
+
+    try{
+
+      const data=await server("getAllStock",TOKEN) || [];
+
+      const q=($("stockSearch") ? $("stockSearch").value : "").toLowerCase();
+
+      const rows=data.filter(x=>
+        !q || JSON.stringify(x).toLowerCase().includes(q)
+      );
+
+      tbody.innerHTML="";
+
+      rows.slice().reverse().forEach(x=>{
+
+        const tr=document.createElement("tr");
+
+        const status=x.stockStatus || "";
+
+        tr.innerHTML=`
+
+          <td>${esc(x.imei)}</td>
+          <td>${esc(x.brand)}</td>
+          <td>${esc(x.model)}</td>
+          <td>${esc(x.memory)}</td>
+          <td>${esc(x.color)}</td>
+          <td>${money(x.purchasePrice)}</td>
+          <td>${money(x.salePrice)}</td>
+          <td>${esc(x.activationStatus)}</td>
+          <td>${esc(x.supplier)}</td>
+          <td>${esc(x.shop)}</td>
+
+          <td>
+            <span class="status ${
+              String(status).toLowerCase()==="sold"
+              ? "status-red"
+              : "status-green"
+            }">
+              ${esc(status)}
+            </span>
+          </td>
+
+          <td>
+            <div class="actions">
+              <button class="btn btn-warning btn-sm" onclick="editStockPrompt(${Number(x.row)})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteStockPrompt(${Number(x.row)})">Delete</button>
+            </div>
+          </td>
+
+        `;
+
+        tbody.appendChild(tr);
+
+      });
+
+      if(!rows.length){
+        tbody.innerHTML=
+          "<tr><td colspan='12' class='empty'>No stock found</td></tr>";
+      }
+
+    }catch(e){
+
+      tbody.innerHTML=
+        "<tr><td colspan='12' class='empty'>"+esc(e.message)+"</td></tr>";
+
+    }
+
+  }
+
+
+  async function editStockPrompt(row){
+    try{
+      const data=await server("getAllStock",TOKEN)||[]; const x=data.find(v=>Number(v.row)===Number(row));
+      if(!x){toast("Stock not found","error");return;}
+      const obj={imei:prompt("IMEI",x.imei),brand:prompt("Brand",x.brand),model:prompt("Model",x.model),memory:prompt("Memory",x.memory),color:prompt("Color",x.color),purchasePrice:Number(prompt("Purchase Price",x.purchasePrice)),salePrice:Number(prompt("Sale Price",x.salePrice)),activationStatus:prompt("Activation Status",x.activationStatus),supplier:prompt("Supplier",x.supplier),shop:prompt("Shop",x.shop)};
+      if(obj.imei===null)return; await server("editStock",TOKEN,row,obj); toast("Stock updated"); loadStock(); loadDashboard();
+    }catch(e){toast(e.message||"Stock edit failed","error");}
+  }
+
+  async function deleteStockPrompt(row){
+
+    if(!confirm("Delete this stock item?"))return;
+
+    try{
+
+      await server("deleteStock",TOKEN,row);
+
+      toast("Stock deleted");
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== SUPPLIERS ===================== */
+
+  async function saveSupplier(){
+
+    const obj={
+      type:"Supplier",
+      name:$("supplierName").value,
+      mobile:$("supplierMobile").value,
+      address:$("supplierAddress").value,
+      openingBalance:Number($("supplierOpening").value||0)
+    };
+
+    if(!obj.name){
+      toast("Supplier name required","error");
+      return;
+    }
+
+    try{
+
+      await server("addParty",TOKEN,obj);
+
+      toast("Supplier saved");
+
+      $("supplierName").value="";
+      $("supplierMobile").value="";
+      $("supplierAddress").value="";
+      $("supplierOpening").value="0";
+
+      await loadInitialData();
+      loadSuppliers();
+
+    }catch(e){
+
+      toast(e.message || "Save failed","error");
+
+    }
+
+  }
+
+
+  function loadSuppliers(){
+
+    const tbody=$("supplierTable");
+
+    try{
+
+      const data=PARTIES.filter(x=>
+        String(x.type).toLowerCase()==="supplier"
+      );
+
+      tbody.innerHTML="";
+
+      data.forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+
+            <td>${esc(x.id)}</td>
+            <td>${esc(x.name)}</td>
+            <td>${esc(x.mobile)}</td>
+            <td>${esc(x.address)}</td>
+            <td>${money(x.openingBalance)}</td>
+            <td>${esc(x.status)}</td>
+
+            <td>
+              <div class="actions">
+                <button class="btn btn-warning btn-sm" onclick="editPartyPrompt(${Number(x.row)})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deletePartyPrompt(${Number(x.row)})">Delete</button>
+              </div>
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='7' class='empty'>No suppliers found</td></tr>";
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  /* ===================== CUSTOMERS ===================== */
+
+  async function saveCustomer(){
+
+    const obj={
+      type:"Customer",
+      name:$("customerName").value,
+      mobile:$("customerMobile").value,
+      address:$("customerAddress").value,
+      customerType:$("customerType").value,
+      openingBalance:Number($("customerOpening").value||0)
+    };
+
+    if(!obj.name){
+      toast("Customer name required","error");
+      return;
+    }
+
+    try{
+
+      await server("addParty",TOKEN,obj);
+
+      toast("Customer saved");
+
+      $("customerName").value="";
+      $("customerMobile").value="";
+      $("customerAddress").value="";
+      $("customerOpening").value="0";
+
+      await loadInitialData();
+      loadCustomers();
+
+    }catch(e){
+
+      toast(e.message || "Save failed","error");
+
+    }
+
+  }
+
+
+  function loadCustomers(){
+
+    const tbody=$("customerTable");
+
+    const data=PARTIES.filter(x=>
+      String(x.type).toLowerCase()==="customer"
+    );
+
+    tbody.innerHTML="";
+
+    data.forEach(x=>{
+
+      tbody.innerHTML+=`
+
+        <tr>
+
+          <td>${esc(x.id)}</td>
+          <td>${esc(x.name)}</td>
+          <td>${esc(x.mobile)}</td>
+          <td>${esc(x.customerType)}</td>
+          <td>${esc(x.address)}</td>
+          <td>${money(x.openingBalance)}</td>
+
+          <td>
+            <div class="actions">
+              <button class="btn btn-warning btn-sm" onclick="editPartyPrompt(${Number(x.row)})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deletePartyPrompt(${Number(x.row)})">Delete</button>
+            </div>
+          </td>
+
+        </tr>
+
+      `;
+
+    });
+
+    if(!data.length){
+      tbody.innerHTML="<tr><td colspan='7' class='empty'>No customers found</td></tr>";
+    }
+
+  }
+
+
+  async function editPartyPrompt(row){
+    const x=PARTIES.find(v=>Number(v.row)===Number(row)); if(!x)return;
+    const name=prompt("Name",x.name); if(name===null)return; const mobile=prompt("Mobile",x.mobile||""); if(mobile===null)return; const address=prompt("Address",x.address||""); if(address===null)return;
+    let customerType=x.customerType||"Cash"; if(String(x.type).toLowerCase()==="customer"){customerType=prompt("Customer Type (Cash/Wholesale)",customerType)||customerType;}
+    const opening=prompt("Opening Balance",x.openingBalance||0); if(opening===null)return;
+    try{await server("editParty",TOKEN,row,{type:x.type,name,mobile,address,customerType,openingBalance:Number(opening)||0});toast("Party updated");await loadInitialData();loadSuppliers();loadCustomers();}catch(e){toast(e.message||"Party edit failed","error");}
+  }
+
+  async function deletePartyPrompt(row){
+
+    if(!confirm("Delete this party?"))return;
+
+    try{
+
+      await server("deleteParty",TOKEN,row);
+
+      toast("Party deleted");
+
+      await loadInitialData();
+
+      loadSuppliers();
+      loadCustomers();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== MASTERS ===================== */
+
+  function masterTab(type,el){
+
+    activeMasterType=type;
+
+    document.querySelectorAll(".tab").forEach(x=>
+      x.classList.remove("active")
+    );
+
+    el.classList.add("active");
+
+    $("masterLabel").textContent=type+" Name";
+
+    loadMasters();
+
+  }
+
+
+  async function saveMaster(){
+
+    const name=$("masterName").value.trim();
+
+    if(!name){
+
+      toast("Name required","error");
+      return;
+
+    }
+
+    try{
+
+      await server(
+        "addMaster",
+        TOKEN,
+        activeMasterType,
+        name
+      );
+
+      $("masterName").value="";
+
+      toast(activeMasterType+" saved");
+
+      await loadInitialData();
+      loadMasters();
+
+    }catch(e){
+
+      toast(e.message || "Save failed","error");
+
+    }
+
+  }
+
+
+  function loadMasters(){
+
+    const tbody=$("mastersTable");
+
+    tbody.innerHTML="";
+
+    const data=MASTERS.filter(x=>
+      String(x.type).toLowerCase()===
+      activeMasterType.toLowerCase()
+    );
+
+    data.forEach(x=>{
+
+      tbody.innerHTML+=`
+
+        <tr>
+
+          <td>${esc(x.type)}</td>
+          <td>${esc(x.name)}</td>
+          <td>${esc(x.status)}</td>
+          <td>${esc(x.createdDate)}</td>
+
+          <td>
+            <div class="actions">
+              <button class="btn btn-warning btn-sm" onclick="editMasterPrompt(${Number(x.row)})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteMasterPrompt(${Number(x.row)})">Delete</button>
+            </div>
+          </td>
+
+        </tr>
+
+      `;
+
+    });
+
+    if(!data.length){
+      tbody.innerHTML="<tr><td colspan='5' class='empty'>No records found</td></tr>";
+    }
+
+  }
+
+
+  async function editMasterPrompt(row){const x=MASTERS.find(v=>Number(v.row)===Number(row));if(!x)return;const name=prompt("Name",x.name);if(name===null)return;try{await server("editMaster",TOKEN,row,name);toast("Master updated");await loadInitialData();loadMasters();}catch(e){toast(e.message||"Master edit failed","error");}}
+
+  async function deleteMasterPrompt(row){
+
+    if(!confirm("Delete this master?"))return;
+
+    try{
+
+      await server("deleteMaster",TOKEN,row);
+
+      toast("Deleted");
+
+      await loadInitialData();
+      loadMasters();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== VOUCHERS ===================== */
+
+  async function loadVouchers(){
+
+    try{
+
+      const no=await server("generateVoucherNo",TOKEN);
+
+      $("voucherNo").textContent=no || "";
+
+    }catch(e){}
+
+    const tbody=$("voucherTable");
+
+    tbody.innerHTML=
+      "<tr><td colspan='8' class='loading'>Loading...</td></tr>";
+
+    try{
+
+      const data=await server("getVouchers",TOKEN) || [];
+
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+
+            <td>${esc(x.voucherNo)}</td>
+            <td>${esc(x.date)}</td>
+            <td>${esc(x.type)}</td>
+            <td>${esc(x.party)}</td>
+            <td>${esc(x.description)}</td>
+            <td>${money(x.amount)}</td>
+            <td>${esc(x.paymentMethod)}</td>
+
+            <td>
+
+              <div class="actions">
+
+                <button class="btn btn-warning btn-sm" onclick="editVoucherPrompt('${escJs(x.voucherNo)}')">Edit</button>
+
+                <button class="btn btn-light btn-sm"
+                        onclick="printVoucher('${escJs(x.voucherNo)}')">
+                  Print
+                </button>
+
+                <button class="btn btn-primary btn-sm"
+                        onclick="pdfVoucher('${escJs(x.voucherNo)}')">
+                  PDF
+                </button>
+
+                <button class="btn btn-danger btn-sm"
+                        onclick="deleteVoucherPrompt('${escJs(x.voucherNo)}')">
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML=
+          "<tr><td colspan='8' class='empty'>No vouchers</td></tr>";
+      }
+
+    }catch(e){
+
+      tbody.innerHTML=
+        "<tr><td colspan='8' class='empty'>"+esc(e.message)+"</td></tr>";
+
+    }
+
+  }
+
+
+  async function saveVoucher(){
+
+    const obj={
+
+      type:$("voucherType").value,
+
+      party:$("voucherParty").value,
+
+      description:$("voucherDescription").value,
+
+      amount:Number($("voucherAmount").value||0),
+
+      paymentMethod:$("voucherPaymentMethod").value
+
+    };
+
+    if(!obj.amount){
+
+      toast("Amount required","error");
+      return;
+
+    }
+
+    try{
+
+      await server("createVoucher",TOKEN,obj);
+
+      toast("Voucher saved");
+
+      $("voucherAmount").value="";
+      $("voucherDescription").value="";
+
+      loadVouchers();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Voucher failed","error");
+
+    }
+
+  }
+
+
+  async function editVoucherPrompt(no){
+    try{
+      const v=await server("getVoucherByNo",TOKEN,no);
+      if(!v){toast("Voucher not found","error");return;}
+      const type=prompt("Voucher Type",v.type); if(type===null)return;
+      const party=prompt("Party",v.party||""); if(party===null)return;
+      const amount=prompt("Amount",v.amount); if(amount===null)return;
+      const method=prompt("Payment Method",v.paymentMethod||"Cash"); if(method===null)return;
+      const description=prompt("Description",v.description||""); if(description===null)return;
+      await server("editVoucher",TOKEN,no,{type,party,amount:Number(amount),paymentMethod:method,description});
+      toast("Voucher updated"); loadVouchers(); loadDashboard();
+    }catch(e){toast(e.message || "Voucher edit failed","error");}
+  }
+
+  async function printVoucher(no){
+
+    try{
+
+      const html=await server("getVoucherHtml",TOKEN,no);
+
+      openPrintWindow(html);
+
+    }catch(e){
+
+      toast(e.message || "Print failed","error");
+
+    }
+
+  }
+
+
+  async function pdfVoucher(no){
+
+    try{
+
+      const r=await server("createVoucherPdf",TOKEN,no);
+
+      if(r && r.url){
+        window.open(r.url,"_blank");
+      }
+
+      toast("PDF created");
+
+    }catch(e){
+
+      toast(e.message || "PDF failed","error");
+
+    }
+
+  }
+
+
+  async function deleteVoucherPrompt(no){
+
+    if(!confirm("Delete voucher "+no+" ?"))return;
+
+    try{
+
+      await server("deleteVoucher",TOKEN,no);
+
+      toast("Voucher deleted");
+
+      loadVouchers();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== EXPENSE ===================== */
+
+  async function saveExpense(){
+
+    const obj={
+
+      category:$("expenseCategory").value,
+
+      description:$("expenseDescription").value,
+
+      amount:Number($("expenseAmount").value||0),
+
+      paymentMethod:$("expenseMethod").value,
+
+      shop:$("expenseShop").value
+
+    };
+
+    if(!obj.amount){
+
+      toast("Amount required","error");
+      return;
+
+    }
+
+    try{
+
+      await server("addExpense",TOKEN,obj);
+
+      toast("Expense saved");
+
+      $("expenseAmount").value="";
+      $("expenseDescription").value="";
+
+      loadExpenses();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Expense failed","error");
+
+    }
+
+  }
+
+
+  async function loadExpenses(){
+
+    const tbody=$("expenseTable");
+
+    try{
+
+      const data=await server("getExpenses",TOKEN) || [];
+
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+
+            <td>${esc(x.no)}</td>
+            <td>${esc(x.date)}</td>
+            <td>${esc(x.category)}</td>
+            <td>${esc(x.description)}</td>
+            <td>${money(x.amount)}</td>
+            <td>${esc(x.paymentMethod)}</td>
+
+            <td><div class="actions"><button class="btn btn-warning btn-sm" onclick="editExpensePrompt('${escJs(x.no)}')">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteExpensePrompt(${Number(x.row)})">Delete</button></div></td>
+
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='7' class='empty'>No expenses found</td></tr>";
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  async function editExpensePrompt(no){try{const x=await server("getExpenseByNo",TOKEN,no);if(!x)return;const category=prompt("Category",x.category);if(category===null)return;const description=prompt("Description",x.description);if(description===null)return;const amount=prompt("Amount",x.amount);if(amount===null)return;const method=prompt("Payment Method",x.paymentMethod);if(method===null)return;const shop=prompt("Shop",x.shop||"");if(shop===null)return;await server("editExpense",TOKEN,no,{category,description,amount:Number(amount),paymentMethod:method,shop});toast("Expense updated");loadExpenses();loadDashboard();}catch(e){toast(e.message||"Expense edit failed","error");}}
+
+  async function deleteExpensePrompt(row){
+
+    if(!confirm("Delete expense?"))return;
+
+    try{
+
+      await server("deleteExpense",TOKEN,row);
+
+      toast("Expense deleted");
+      loadExpenses();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== CASH BANK ===================== */
+
+  async function loadCashBank(){
+
+    try{
+
+      const b=await server("getCashBankBalance",TOKEN) || {};
+
+      $("cashBankBalance").textContent=
+        "Cash: Rs. "+money(b.cash||0)+
+        "     |     Bank: Rs. "+money(b.bank||0);
+
+      const data=await server("getCashBankReport",TOKEN) || [];
+
+      const tbody=$("cashBankTable");
+
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+            <td>${esc(x.date)}</td>
+            <td>${esc(x.type)}</td>
+            <td>${esc(x.reference)}</td>
+            <td>${esc(x.description)}</td>
+            <td>${money(x.cash)}</td>
+            <td>${money(x.bank)}</td>
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='6' class='empty'>No records found</td></tr>";
+      }
+
+    }catch(e){
+
+      toast(e.message || "Cash/Bank load failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== LEDGER ===================== */
+
+  async function loadLedger(){
+
+    try{
+
+      const filters = {
+        party: $("ledgerParty").value,
+        fromDate: $("ledgerFrom").value,
+        toDate: $("ledgerTo").value
+      };
+
+      const r=await server("getLedger",TOKEN,filters) || {rows:[]};
+
+      const tbody=$("ledgerTable");
+
+      tbody.innerHTML="";
+
+      (r.rows||[]).forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+            <td>${esc(x.date)}</td>
+            <td>${esc(x.party)}</td>
+            <td>${esc(x.type)}</td>
+            <td>${esc(x.reference)}</td>
+            <td>${esc(x.description)}</td>
+            <td>${money(x.debit)}</td>
+            <td>${money(x.credit)}</td>
+            <td>${money(x.balance)}</td>
+          </tr>
+
+        `;
+
+      });
+
+      if(!r.rows || !r.rows.length){
+        tbody.innerHTML="<tr><td colspan='8' class='empty'>No ledger entries</td></tr>";
+      }
+
+    }catch(e){
+
+      toast(e.message || "Ledger failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== RECEIVABLE / PAYABLE ===================== */
+
+  async function loadReceivable(){
+
+    try{
+
+      const rows = await server("getReceivablePayable",TOKEN) || [];
+
+      let totalReceivable=0;
+      let totalPayable=0;
+
+      rows.forEach(x=>{
+        totalReceivable += Number(x.receivable)||0;
+        totalPayable += Number(x.payable)||0;
+      });
+
+      $("rpReceivable").textContent = money(totalReceivable);
+      $("rpPayable").textContent = money(totalPayable);
+
+      const tbody=$("rpTable");
+
+      tbody.innerHTML="";
+
+      rows.forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+
+            <td>${esc(x.party)}</td>
+            <td>${x.receivable>0 ? "Receivable" : "Payable"}</td>
+            <td>${money(Math.abs(x.balance))}</td>
+
+          </tr>
+
+        `;
+
+      });
+
+      if(!rows.length){
+        tbody.innerHTML="<tr><td colspan='3' class='empty'>No records found</td></tr>";
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  /* ===================== PROFIT LOSS ===================== */
+
+  async function loadProfitLoss(){
+
+    try{
+
+      const filters = {
+        fromDate: $("plFrom").value,
+        toDate: $("plTo").value
+      };
+
+      const r=await server("getProfitLoss",TOKEN,filters) || {};
+
+      $("plSales").textContent   = money(r.sales || 0);
+      $("plCost").textContent    = money(r.costOfSold || 0);
+      $("plGross").textContent   = money(r.grossProfit || 0);
+      $("plExpense").textContent = money(r.expenses || 0);
+      $("plNet").textContent     = money(r.netProfit || 0);
+
+    }catch(e){
+
+      toast(e.message || "P/L failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== RETURNS ===================== */
+
+  async function savePurchaseReturn(){
+
+    const obj={
+
+      type:"Purchase Return",
+
+      party:$("prParty").value,
+
+      imei:$("prIMEI").value,
+
+      amount:Number($("prAmount").value||0),
+
+      paymentMethod:$("prMethod").value,
+
+      reason:$("prReason").value
+
+    };
+
+    if(!obj.imei){
+      toast("IMEI required","error");
+      return;
+    }
+
+    try{
+
+      await server("createReturn",TOKEN,obj);
+
+      toast("Purchase return saved");
+
+      $("prIMEI").value="";
+      $("prAmount").value="";
+      $("prReason").value="";
+
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Return failed","error");
+
+    }
+
+  }
+
+
+  async function saveSaleReturn(){
+
+    const obj={
+
+      type:"Sale Return",
+
+      party:$("srParty").value,
+
+      imei:$("srIMEI").value,
+
+      amount:Number($("srAmount").value||0),
+
+      paymentMethod:$("srMethod").value,
+
+      reason:$("srReason").value
+
+    };
+
+    if(!obj.imei){
+      toast("IMEI required","error");
+      return;
+    }
+
+    try{
+
+      await server("createReturn",TOKEN,obj);
+
+      toast("Sale return saved");
+
+      $("srIMEI").value="";
+      $("srAmount").value="";
+      $("srReason").value="";
+
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Return failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== TRANSFER ===================== */
+
+  async function loadReturnsHistory(){try{const rows=await server("getReturns",TOKEN)||[];$("returnHistory").innerHTML=rows.slice().reverse().map(x=>`<tr><td>${esc(x.no)}</td><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.party)}</td><td>${esc(x.imei)}</td><td>${money(x.amount)}</td><td>${esc(x.reason)}</td><td><button class="btn btn-warning btn-sm" onclick="editReturnPrompt('${escJs(x.no)}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteReturnPrompt('${escJs(x.no)}')">Delete</button></td></tr>`).join("")||`<tr><td colspan="8" class="empty">No returns</td></tr>`;}catch(e){toast(e.message||"Return history failed","error");}}
+  async function editReturnPrompt(no){try{const rows=await server("getReturns",TOKEN)||[];const x=rows.find(v=>String(v.no)===String(no));if(!x)return;const party=prompt("Party",x.party||"");if(party===null)return;const imei=prompt("IMEI",x.imei);if(imei===null)return;const amount=prompt("Amount",x.amount);if(amount===null)return;const method=prompt("Payment Method",x.paymentMethod);if(method===null)return;const reason=prompt("Reason",x.reason||"");if(reason===null)return;await server("editReturn",TOKEN,no,{type:x.type,party,imei,amount:Number(amount),paymentMethod:method,reason});toast("Return updated");loadReturnsHistory();loadStock();loadDashboard();}catch(e){toast(e.message||"Return edit failed","error");}}
+  async function deleteReturnPrompt(no){if(!confirm("Delete return "+no+"?"))return;try{await server("deleteReturn",TOKEN,no);toast("Return deleted");loadReturnsHistory();loadStock();loadDashboard();}catch(e){toast(e.message||"Return delete failed","error");}}
+  async function loadTransfersHistory(){try{const rows=await server("getTransfers",TOKEN)||[];$("transferHistory").innerHTML=rows.slice().reverse().map(x=>`<tr><td>${esc(x.transferNo)}</td><td>${esc(x.date)}</td><td>${esc(x.imei)}</td><td>${esc(x.fromShop)}</td><td>${esc(x.toShop)}</td><td><button class="btn btn-warning btn-sm" onclick="editTransferPrompt('${escJs(x.transferNo)}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteTransferPrompt('${escJs(x.transferNo)}')">Delete</button></td></tr>`).join("")||`<tr><td colspan="6" class="empty">No transfers</td></tr>`;}catch(e){toast(e.message||"Transfer history failed","error");}}
+  async function editTransferPrompt(no){try{const rows=await server("getTransfers",TOKEN)||[];const x=rows.find(v=>String(v.transferNo)===String(no));if(!x)return;const toShop=prompt("To Shop",x.toShop);if(toShop===null)return;await server("editTransfer",TOKEN,no,{toShop});toast("Transfer updated");loadTransfersHistory();loadStock();}catch(e){toast(e.message||"Transfer edit failed","error");}}
+  async function deleteTransferPrompt(no){if(!confirm("Delete transfer "+no+"?"))return;try{await server("deleteTransfer",TOKEN,no);toast("Transfer deleted");loadTransfersHistory();loadStock();}catch(e){toast(e.message||"Transfer delete failed","error");}}
+
+  async function saveTransfer(){
+
+    const obj={
+
+      imei:$("transferIMEI").value,
+
+      fromShop:$("transferFrom").value,
+
+      toShop:$("transferTo").value
+
+    };
+
+    if(!obj.imei || !obj.toShop){
+      toast("IMEI and To Shop required","error");
+      return;
+    }
+
+    try{
+
+      await server("stockTransfer",TOKEN,obj);
+
+      toast("Stock transferred");
+
+      $("transferIMEI").value="";
+
+      loadStock();
+
+    }catch(e){
+
+      toast(e.message || "Transfer failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== SALE ORDER ===================== */
+
+  async function saveSaleOrder(){
+
+    const obj={
+
+      customerName:$("orderCustomer").value,
+
+      customerMobile:$("orderMobile").value,
+
+      customerType:"Retail",
+
+      imei:$("orderIMEI").value,
+
+      amount:Number($("orderAmount").value||0),
+
+      status:"Pending"
+
+    };
+
+    try{
+
+      await server("createSaleOrder",TOKEN,obj);
+
+      toast("Order saved");
+
+      $("orderMobile").value="";
+      $("orderIMEI").value="";
+      $("orderAmount").value="";
+
+      loadSaleOrders();
+
+    }catch(e){
+
+      toast(e.message || "Order failed","error");
+
+    }
+
+  }
+
+
+  async function editSaleOrderPrompt(no){try{const rows=await server("getSaleOrders",TOKEN)||[];const x=rows.find(v=>String(v.orderNo)===String(no));if(!x)return;const customer=prompt("Customer",x.customer);if(customer===null)return;const mobile=prompt("Mobile",x.mobile||"");if(mobile===null)return;const imei=prompt("IMEI",x.imei||"");if(imei===null)return;const amount=prompt("Amount",x.amount);if(amount===null)return;const status=prompt("Status",x.status||"Pending");if(status===null)return;await server("editSaleOrder",TOKEN,no,{customerName:customer,customerMobile:mobile,imei,amount:Number(amount),status});toast("Order updated");loadSaleOrders();}catch(e){toast(e.message||"Order edit failed","error");}}
+  async function deleteSaleOrderPrompt(no){if(!confirm("Delete order "+no+"?"))return;try{await server("deleteSaleOrder",TOKEN,no);toast("Order deleted");loadSaleOrders();}catch(e){toast(e.message||"Order delete failed","error");}}
+
+  async function loadSaleOrders(){
+
+    try{
+
+      const data=await server("getSaleOrders",TOKEN) || [];
+
+      const tbody=$("saleOrderTable");
+
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+            <td>${esc(x.orderNo)}</td>
+            <td>${esc(x.date)}</td>
+            <td>${esc(x.customer)}</td>
+            <td>${esc(x.imei)}</td>
+            <td>${money(x.amount)}</td>
+            <td>${esc(x.status)}</td><td><button class="btn btn-warning btn-sm" onclick="editSaleOrderPrompt('${escJs(x.orderNo)}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteSaleOrderPrompt('${escJs(x.orderNo)}')">Delete</button></td>
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='6' class='empty'>No orders found</td></tr>";
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+    }
+
+  }
+
+
+  /* ===================== USERS ===================== */
+
+  async function saveUser(){
+
+    const obj={
+
+      username:$("userUsername").value,
+
+      password:$("userPassword").value,
+
+      name:$("userName").value,
+
+      role:$("userRole").value,
+
+      status:"Active",
+
+      view:true,
+      add:true,
+      edit:true,
+      delete:true
+
+    };
+
+    if(!obj.username || !obj.password){
+      toast("Username and password required","error");
+      return;
+    }
+
+    try{
+
+      await server("createUser",TOKEN,obj);
+
+      toast("User created");
+
+      $("userUsername").value="";
+      $("userPassword").value="";
+      $("userName").value="";
+
+      loadUsers();
+
+    }catch(e){
+
+      toast(e.message || "User creation failed","error");
+
+    }
+
+  }
+
+
+  async function loadUsers(){
+
+    try{
+
+      const data=await server("getAllUsers",TOKEN) || [];
+
+      const tbody=$("userTable");
+
+      tbody.innerHTML="";
+
+      data.forEach(x=>{
+
+        tbody.innerHTML+=`
+
+          <tr>
+
+            <td>${esc(x.username)}</td>
+            <td>${esc(x.name)}</td>
+            <td>${esc(x.role)}</td>
+
+            <td>
+              <span class="status ${
+                String(x.status).toLowerCase()==="active"
+                ? "status-green"
+                : "status-red"
+              }">
+                ${esc(x.status)}
+              </span>
+            </td>
+
+            <td>-</td>
+
+            <td>
+
+              <div class="actions">
+
+                ${
+                  String(x.status).toLowerCase()==="blocked"
+                  ? `<button class="btn btn-success btn-sm"
+                             onclick="unblockUserPrompt('${escJs(x.username)}')">
+                       Unblock
+                     </button>`
+                  : `<button class="btn btn-warning btn-sm"
+                             onclick="blockUserPrompt('${escJs(x.username)}')">
+                       Block
+                     </button>`
+                }
+
+                <button class="btn btn-danger btn-sm"
+                        onclick="deleteUserPrompt('${escJs(x.username)}')">
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='6' class='empty'>No users found</td></tr>";
+      }
+
+    }catch(e){
+
+      toast(e.message || "Users load failed","error");
+
+    }
+
+  }
+
+
+  async function blockUserPrompt(username){
+
+    if(!confirm("Block user "+username+"?"))return;
+
+    try{
+
+      await server("blockUser",TOKEN,username);
+
+      toast("User blocked");
+      loadUsers();
+
+    }catch(e){
+
+      toast(e.message || "Block failed","error");
+
+    }
+
+  }
+
+
+  async function unblockUserPrompt(username){
+
+    try{
+
+      await server("unblockUser",TOKEN,username);
+
+      toast("User unblocked");
+      loadUsers();
+
+    }catch(e){
+
+      toast(e.message || "Unblock failed","error");
+
+    }
+
+  }
+
+
+  async function deleteUserPrompt(username){
+
+    if(!confirm("Delete user "+username+"?"))return;
+
+    try{
+
+      await server("deleteUser",TOKEN,username);
+
+      toast("User deleted");
+      loadUsers();
+
+    }catch(e){
+
+      toast(e.message || "Delete failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== GLOBAL SEARCH ===================== */
+
+  async function doGlobalSearch(){
+
+    const q=$("globalSearch").value.trim();
+
+    if(!q)return;
+
+    try{
+
+      const r=await server("globalSearch",TOKEN,q) || [];
+
+      if(!r.length){
+        toast("No results found","error");
+        return;
+      }
+
+      const lines = r.map(x=>
+        "["+x.type+"] "+x.title+" - "+x.detail
+      ).join("\n");
+
+      alert(lines);
+
+    }catch(e){
+
+      toast(e.message || "Search failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== PURCHASE ===================== */
+
+  async function loadPurchase(){
+    PURCHASE_EDIT_MODE=false; PURCHASE_EDIT_NO=""; if($("purchaseFormTitle"))$("purchaseFormTitle").textContent="Purchase Invoice"; if($("purchaseSaveBtn"))$("purchaseSaveBtn").textContent="Save Purchase"; if($("purchaseCancelEditBtn"))$("purchaseCancelEditBtn").style.display="none";
+    try{
+      const no=await server("generatePurchaseNo",TOKEN);
+      $("purchaseNo").textContent=no || "";
+    }catch(e){}
+
+    $("purchaseRows").innerHTML="";
+    $("purchaseTotal").textContent="0";
+    $("purchasePayment").value="0";
+    $("purchaseSupplierMobile").value="";
+
+    addPurchaseRow();
+    loadPurchaseHistory();
+  }
+
+
+  async function loadPurchaseHistory(){
+    const tbody=$("purchaseHistory");
+    if(!tbody)return;
+
+    tbody.innerHTML="<tr><td colspan='9' class='loading'>Loading...</td></tr>";
+
+    try{
+      const filters={
+        search:$("purchaseSearch") ? $("purchaseSearch").value : ""
+      };
+
+      const data=await server("getAllPurchases",TOKEN,filters) || [];
+      tbody.innerHTML="";
+
+      data.slice().reverse().forEach(x=>{
+        const tr=document.createElement("tr");
+
+        tr.innerHTML=`
+          <td>${esc(x.purchaseNo)}</td>
+          <td>${esc(x.date)}</td>
+          <td>${esc(x.supplier || "")}</td>
+          <td>${esc(x.shop || "")}</td>
+          <td>${esc(x.qty)}</td>
+          <td>${money(x.total)}</td>
+          <td>${money(x.payment)}</td>
+          <td>${money(x.balance)}</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-warning btn-sm"
+                      onclick="editPurchasePrompt('${escJs(x.purchaseNo)}')">
+                Edit
+              </button>
+              <button class="btn btn-danger btn-sm"
+                      onclick="deletePurchasePrompt('${escJs(x.purchaseNo)}')">
+                Delete
+              </button>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      if(!data.length){
+        tbody.innerHTML="<tr><td colspan='9' class='empty'>No purchases found</td></tr>";
+      }
+    }catch(e){
+      tbody.innerHTML=
+        "<tr><td colspan='9' class='empty'>"+
+        esc(e.message || "Purchase history failed")+
+        "</td></tr>";
+    }
+  }
+
+
+  let PURCHASE_EDIT_MODE=false, PURCHASE_EDIT_NO="";
+  async function editPurchasePrompt(purchaseNo){
+    try{
+      const old=await server("getPurchaseByNo",TOKEN,purchaseNo); if(!old){toast("Purchase not found","error");return;}
+      PURCHASE_EDIT_MODE=true; PURCHASE_EDIT_NO=purchaseNo;
+      $("purchaseNo").textContent=purchaseNo; $("purchaseFormTitle").textContent="Edit Purchase"; $("purchaseSaveBtn").textContent="Update Purchase"; $("purchaseCancelEditBtn").style.display="inline-block";
+      $("purchaseSupplier").value=old.supplier||old.supplierName||""; $("purchaseSupplierMobile").value=old.supplierMobile||""; $("purchaseShop").value=old.shop||""; $("purchasePayment").value=old.payment||old.paymentAmount||0; $("purchasePaymentMethod").value=old.paymentMethod||"Cash";
+      $("purchaseRows").innerHTML="";
+      (old.items||[]).forEach(x=>{addPurchaseRow();const tr=$("purchaseRows").lastElementChild;tr.querySelector(".p-imei").value=x.imei||"";tr.querySelector(".p-brand").value=x.brand||"";tr.querySelector(".p-model").value=x.model||"";tr.querySelector(".p-memory").value=x.memory||"";tr.querySelector(".p-color").value=x.color||"";tr.querySelector(".p-buy").value=x.purchasePrice||0;tr.querySelector(".p-sale").value=x.salePrice||0;tr.querySelector(".p-qty").value=x.qty||1;});
+      if(!(old.items||[]).length)addPurchaseRow(); purchaseCalculate(); showPage("purchase"); window.scrollTo({top:0,behavior:"smooth"});
+    }catch(e){toast(e.message||"Purchase edit failed","error");}
+  }
+
+  async function deletePurchasePrompt(purchaseNo){
+    if(!confirm(
+      "Delete purchase "+purchaseNo+"?\n\n"+
+      "Stock and accounting entries will also be removed."
+    )) return;
+
+    try{
+      const r=await server(
+        "deletePurchase",
+        TOKEN,
+        purchaseNo
+      );
+
+      toast(
+        r && r.message
+          ? r.message
+          : "Purchase deleted"
+      );
+
+      await loadInitialData();
+      loadPurchase();
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+      toast(e.message || "Purchase delete failed","error");
+    }
+  }
+
+
+  function addPurchaseRow(){
+
+    const tbody=$("purchaseRows");
+
+    const tr=document.createElement("tr");
+
+    tr.innerHTML=`
+
+      <td>
+        <input class="p-imei"
+               placeholder="IMEI"
+               style="width:130px;padding:7px">
+      </td>
+
+      <td>
+        <select class="p-brand" style="padding:7px">
+          ${masterOptions("Brand")}
+        </select>
+      </td>
+
+      <td>
+        <select class="p-model" style="padding:7px">
+          ${masterOptions("Model")}
+        </select>
+      </td>
+
+      <td>
+        <select class="p-memory" style="padding:7px">
+          ${masterOptions("Memory")}
+        </select>
+      </td>
+
+      <td>
+        <select class="p-color" style="padding:7px">
+          ${masterOptions("Color")}
+        </select>
+      </td>
+
+      <td>
+        <input class="p-buy"
+               type="number"
+               value="0"
+               style="width:100px;padding:7px"
+               oninput="purchaseCalculate()">
+      </td>
+
+      <td>
+        <input class="p-sale"
+               type="number"
+               value="0"
+               style="width:100px;padding:7px">
+      </td>
+
+      <td>
+        <input class="p-qty"
+               type="number"
+               value="1"
+               style="width:60px;padding:7px"
+               oninput="purchaseQtyChanged(this)">
+      </td>
+
+      <td class="p-total">0</td>
+
+      <td>
+        <button class="btn btn-danger btn-sm"
+                onclick="this.closest('tr').remove();purchaseCalculate()">
+          ×
+        </button>
+      </td>
+
+    `;
+
+    tbody.appendChild(tr);
+
+  }
+
+
+  function masterOptions(type){
+
+    return MASTERS
+      .filter(x=>
+        String(x.type).toLowerCase()===
+        type.toLowerCase()
+      )
+      .map(x=>
+        `<option value="${esc(x.name)}">${esc(x.name)}</option>`
+      )
+      .join("");
+
+  }
+
+
+  function purchaseQtyChanged(input){
+    const qty=Math.max(1,Math.floor(Number(input.value||1))), tr=input.closest("tr"); if(qty<=1){input.value=1;purchaseCalculate();return;} input.value=1;
+    for(let i=1;i<qty;i++){addPurchaseRow();const nr=$("purchaseRows").lastElementChild;["brand","model","memory","color","buy","sale"].forEach(k=>{nr.querySelector(".p-"+k).value=tr.querySelector(".p-"+k).value;});nr.querySelector(".p-qty").value=1;} purchaseCalculate();toast(qty+" quantity ke liye "+qty+" IMEI rows bana di gayi hain");
+  }
+
+
+  function purchaseCalculate(){
+
+    let total=0;
+
+    document.querySelectorAll("#purchaseRows tr")
+      .forEach(tr=>{
+
+        const buy=Number(
+          tr.querySelector(".p-buy").value||0
+        );
+
+        const qty=Number(
+          tr.querySelector(".p-qty").value||0
+        );
+
+        const t=buy*qty;
+
+        tr.querySelector(".p-total").textContent=
+          money(t);
+
+        total+=t;
+
+      });
+
+    $("purchaseTotal").textContent=money(total);
+
+  }
+
+
+  async function savePurchase(){
+
+    const rows=[];
+
+    document.querySelectorAll("#purchaseRows tr")
+      .forEach(tr=>{
+
+        const imei = tr.querySelector(".p-imei").value.trim();
+
+        if(!imei) return;
+
+        rows.push({
+
+          imei:imei,
+
+          brand:tr.querySelector(".p-brand").value,
+
+          model:tr.querySelector(".p-model").value,
+
+          memory:tr.querySelector(".p-memory").value,
+
+          color:tr.querySelector(".p-color").value,
+
+          purchasePrice:Number(
+            tr.querySelector(".p-buy").value||0
+          ),
+
+          salePrice:Number(
+            tr.querySelector(".p-sale").value||0
+          ),
+
+          qty:1
+
+        });
+
+      });
+
+    if(!rows.length){
+      toast("Please add at least one item with IMEI","error");
+      return;
+    }
+
+    try{
+
+      const obj={
+
+        supplierName:$("purchaseSupplier").value,
+
+        supplierMobile:$("purchaseSupplierMobile").value,
+
+        shop:$("purchaseShop").value,
+
+        paymentAmount:Number(
+          $("purchasePayment").value||0
+        ),
+
+        paymentMethod:$("purchasePaymentMethod").value,
+
+        items:rows
+
+      };
+
+      const result=PURCHASE_EDIT_MODE ? await server("editPurchase",TOKEN,PURCHASE_EDIT_NO,obj) : await server("createPurchase",TOKEN,obj);
+
+      toast(PURCHASE_EDIT_MODE ? "Purchase updated" : "Purchase saved");
+
+      await loadInitialData();
+
+      loadPurchase();
+      loadStock();
+      loadDashboard();
+
+    }catch(e){
+
+      toast(e.message || "Purchase failed","error");
+
+    }
+
+  }
+
+
+  /* ===================== UTIL ===================== */
+
+  function openPrintWindow(html){
+
+    const w=window.open("","_blank");
+
+    if(!w){
+
+      toast("Popup blocked. Allow popups.","error");
+      return;
+
+    }
+
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+
+    setTimeout(()=>{
+      w.focus();
+      w.print();
+    },500);
+
+  }
+
+
+  function money(n){
+
+    const num=Number(n||0);
+
+    return num.toLocaleString("en-PK",{
+      maximumFractionDigits:2
+    });
+
+  }
+
+
+  function esc(v){
+
+    return String(v??"")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+
+  }
+
+
+  function escJs(v){
+
+    return String(v??"")
+      .replace(/\\/g,"\\\\")
+      .replace(/'/g,"\\'")
+      .replace(/\n/g,"\\n")
+      .replace(/\r/g,"\\r");
+
+  }
+
+
+  /* ===================== JOURNAL VOUCHERS ===================== */
+  let JV_EDIT_NO="";
+  async function loadJournalVouchers(){
+    try{
+      const rows=await server("getJournalVouchers",TOKEN)||[];
+      $("journalTable").innerHTML=rows.slice().reverse().map(x=>`<tr><td>${esc(x.jvNo)}</td><td>${esc(x.date)}</td><td>${esc(x.debitAccount)}</td><td>${esc(x.creditAccount)}</td><td>${money(x.amount)}</td><td>${esc(x.description)}</td><td><button class="btn btn-warning btn-sm" onclick="editJournalVoucherUI('${escJs(x.jvNo)}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteJournalVoucherUI('${escJs(x.jvNo)}')">Delete</button></td></tr>`).join("") || `<tr><td colspan="7" class="empty">No journal vouchers</td></tr>`;
+    }catch(e){toast(e.message||"JV load failed","error");}
+  }
+  async function saveJournalVoucher(){
+    const obj={debitAccount:$("jvDebit").value.trim(),creditAccount:$("jvCredit").value.trim(),amount:Number($("jvAmount").value||0),description:$("jvDescription").value.trim()};
+    try{ if(JV_EDIT_NO) await server("editJournalVoucher",TOKEN,JV_EDIT_NO,obj); else await server("createJournalVoucher",TOKEN,obj); toast(JV_EDIT_NO?"JV updated":"JV saved"); resetJournalVoucher(); loadJournalVouchers(); }catch(e){toast(e.message||"JV failed","error");}
+  }
+  async function editJournalVoucherUI(no){
+    try{const v=await server("getJournalVoucherByNo",TOKEN,no); if(!v)throw new Error("JV not found"); JV_EDIT_NO=no; $("jvNo").textContent=no; $("jvDebit").value=v.debitAccount||""; $("jvCredit").value=v.creditAccount||""; $("jvAmount").value=v.amount||0; $("jvDescription").value=v.description||""; $("jvSaveBtn").textContent="Update JV"; $("jvCancelBtn").style.display="inline-block"; showPage("journal");}catch(e){toast(e.message||"JV edit failed","error");}
+  }
+  async function deleteJournalVoucherUI(no){if(!confirm("Delete JV "+no+"? Ledger entries will also be removed."))return;try{await server("deleteJournalVoucher",TOKEN,no);toast("JV deleted");loadJournalVouchers();loadDashboard();}catch(e){toast(e.message||"JV delete failed","error");}}
+  function resetJournalVoucher(){JV_EDIT_NO=""; $("jvNo").textContent=""; $("jvDebit").value=""; $("jvCredit").value=""; $("jvAmount").value=""; $("jvDescription").value=""; $("jvSaveBtn").textContent="Save JV"; $("jvCancelBtn").style.display="none";}
+
+  /* ===================== START ===================== */
+
+  window.addEventListener("load",()=>{
+
+    $("dashboardDate").textContent=
+      new Date().toLocaleDateString();
+
+  });
+
+</script>
+
+</body>
+</html>
